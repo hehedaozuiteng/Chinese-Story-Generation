@@ -6,7 +6,7 @@ This is a code repository for the improving the performance of baseline model fr
 
 ## 2. Baseline Model
 
-1. **Download:** The checkpoints of baseline model and example data can be downloaded from [THUCloud](https://cloud.tsinghua.edu.cn/d/576f340a43964a23b1a5/) or [Hugging Face Model Card](https://huggingface.co/thu-coai). The training and generation scripts are under the directory `LOT-LongLM\longlm`.
+1. **Download:** The checkpoints of baseline model and example data can be downloaded from [THUCloud](https://cloud.tsinghua.edu.cn/d/576f340a43964a23b1a5/) or [Hugging Face Model Card](https://huggingface.co/thu-coai). The training and generation scripts are under the directory `./LOT-LongLM/longlm`.
 
 2. **Model Loading:**
 
@@ -53,14 +53,104 @@ This is a code repository for the improving the performance of baseline model fr
 
 Data statistics of the OutGen task in LOT. The abbreviations char/sent/len stand for character/sentence/length, respectively.
 
+![](figure/datasetTable.PNG)
+
 The datasets and evaluation scripts can be downloaded from [THUCloud](https://cloud.tsinghua.edu.cn/d/0cf033b0c7c049be855d/).
 
-## 4. Ablation Experiment
+The python script [jsontrans.py](DependencyandSemanticDenoising/jsontrans.py) provides APIs to convert the jsonl file downloaded from THUCloud into the `.source` and `.target` file required for [training script](#Generation).
+
+## 4. Experiments
+
+### Generation Tasks
+
+The training script of LongLM for the generation tasks is the same as pretraining script. The generation script and example data can be found under `./LOT-LongLM/baseline/generation`. You can execute `bash ./gen.sh` for generation.
 
 ### Dependency Tagging
 
+The python script [DependencyTagging.py](DependencyandSemanticDenoising/DependencyTagging.py) consumes the `.jsonl` files and adding the dependency tokens into the story, in order to produce the `.source` and `.target` files.
+
 ### Semantic Denoising
+
+The python script [boost_simbert.py](DependencyandSemanticDenoising/boost_simbert.py) consumes the `.jsonl` files and expanded data to 6 times the original size, in order to produce the `.source` and `.target` files.
+
+### Dependency and Semantic Denoising
+
+1. Run the python script [boost_simbert.py](DependencyandSemanticDenoising/boost_simbert.py) with the codes :
+
+   ```python
+
+    data = load_file("./boosts_bert/train.jsonl") # read the training data from json file
+    data = boost_data(data, gen_synonyms, 5) # Expanded data to 6 times the original size
+    write_jsonl_file_source("./boosts_bert/train_new.jsonl", data) #saving the data as jsonal file
+
+   ```
+
+   To generate a new `train.jsonl`
+
+2. Tuns the python script [DependencyTagging.py](DependencyandSemanticDenoising/DependencyTagging.py) to label the dependency tagging.
+
+   ```python
+
+    data = load_file("./boosts_bert/train_new.jsonl")
+    # read the training data from json file
+    write_txt_file_source("./outgen/train.source",data)
+    # save the outline from data to the file
+    write_txt_file_target("./outgen/train.target",data)
+
+   ```
+
+3. Training the model.
 
 ### 5. Dependencies
 
-dependencies files
+Difference script requires different dependencies environments. You can find the different version [requirements.txt](requirements/requirements.txt) in the folder [requirements](requirements).
+
+[Dependencis for training](requirements/requirements_training.txt)
+
+```
+datasets                1.6.2
+deepspeed               0.3.16
+huggingface-hub         0.0.8
+jieba                   0.42.1
+jsonlines               2.0.0
+nltk                    3.5
+numpy                   1.19.5
+pytorch-lightning       1.2.0
+regex                   2020.11.13
+rouge                   1.0.1
+rouge-score             0.0.4
+sacrebleu               1.5.0
+scipy                   1.5.4
+sentencepiece           0.1.95
+tokenizers              0.10.1
+torch                   1.8.1
+torchaudio              0.8.0
+torchmetrics            0.2.0
+torchvision             0.9.0
+transformers            4.6.1
+```
+
+[Dependencis for boost_simbert.py](requirements/requirements_roformer-sim.txt)
+
+```
+tensorflow               1.14
+keras                   2.3.1
+bert4keras             0.10.6
+
+```
+
+[Dependencis for DependencyTagging](DependencyandSemanticDenoising/DependencyTagging.py)
+
+```
+hanlp
+```
+
+## Citation
+
+```txt
+@misc{tang2022CSG,
+      title={Improving Chinese Story Generation via Awareness of Syntactic Dependencies and Semantics},
+      author={Henglin Huang and Chen Tang and Tyler Loakman and Frank Guerin and Chenghua Lin},
+      year={2022}
+}
+```

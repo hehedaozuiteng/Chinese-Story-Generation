@@ -82,6 +82,7 @@ def trans_txt2txt_file(filename_w,filename_r):
             wf.write(str1)
 
 
+
 """
 text = cut_sent(data[4]['story'])
 doc = HanLP(text, tasks='dep')
@@ -90,14 +91,20 @@ doc.pretty_print()
 
 if __name__ == '__main__':
 
-    data = load_file("./outgen/valid.jsonl")
+    data = load_file("./outgen/train.jsonl")
     # read the training data from json file
 
-    write_txt_file_source("./tsk_hanlp_nsubj/val.source",data)
+    write_txt_file_source("./outgen/train.source",data)
+    # save the outline from data to the file 
 
+
+    write_txt_file_target("./outgen/train.target",data)
     # adding the Dependency token into the story text in the data
     # and save the story text to the file
 
-    write_txt_file_target("./tsk_hanlp_nsubj/val.target",data)
-    # save the training target from data to the file 
+    #trans_txt2json_file("train.jsonl","train.target")
+    # remove the token inside the story text, and write as .jsonl file
+
+    #trans_txt2txt_file("trainW.target","trainR.target")
+    # remove the token inside the story text, and write as .txt file
 

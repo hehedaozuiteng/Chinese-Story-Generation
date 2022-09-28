@@ -74,11 +74,19 @@ def write_txt_file_target(filename,datas):
                 str = "<extra_id_1>" + i['story'] + "\n"
                 f.write(str)
 
-
+def write_jsonl_file_source(filename,data):
+    datas = dumpling_data(data,len(data))
+    with open(filename, "w+",encoding='utf-8') as f:
+        for d in datas:
+            str1 = str(d) + "\n"
+            str1 = str1.replace("\'", "\"")
+            f.write(str1)
 
 if __name__ == '__main__':
 
     data = load_file("./boosts_bert/train.jsonl") # read the training data from json file
     data = boost_data(data, gen_synonyms, 5) # Expanded data to 6 times the original size
-    write_txt_file_source("./boosts_bert/train.source", data) # save the story from data to the file 
-    write_txt_file_target("./boosts_bert/train.target", data) # save the training target from data to the file 
+    write_txt_file_source("./boosts_bert/train.source", data) # save the outline from data to the file 
+    write_txt_file_target("./boosts_bert/train.target", data) # save the story from data to the file 
+
+    #write_jsonl_file_source("./boosts_bert/train.jsonl", data) #saving the data as jsonal file
