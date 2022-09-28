@@ -1,0 +1,6 @@
+[submodule "LOT-LongLM"]
+	path = LOT-LongLM
+	url = git@github.com:thu-coai/LOT-LongLM.git
+[submodule "roformer-sim"]
+	path = roformer-sim
+	url = git@github.com:ZhuiyiTechnology/roformer-sim.git
