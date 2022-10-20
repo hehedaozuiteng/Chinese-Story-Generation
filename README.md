@@ -101,7 +101,7 @@ The python script [boost_simbert.py](DependencyandSemanticDenoising/boost_simber
 
 3. Training the model.
 
-### Dependencies
+## 5. Dependencies
 
 Difference script requires different dependencies environments. You can find the different version [requirements.txt](requirements/requirements.txt) in the folder [requirements](requirements).
 
